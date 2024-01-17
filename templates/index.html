@@ -1,0 +1,48 @@
+{% extends "layout.html" %} {% block body %}
+<div class="header">
+    <h1>Tasks</h1>
+</div>
+<div class="container">
+    <div class="section">
+        <h2>Add a Task</h2>
+        <form action="/" method="post">
+            <input type="text" name="tname" placeholder="Task Name" required />
+            <textarea name="description" id="description" cols="30" rows="3" required></textarea>
+            <input type="date" name="date" id="date" required />
+            <select name="status" required>
+                <option value="" disabled selected style="display: none">Please select an option</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <input type="submit" value="Add Task" />
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>All Tasks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through tasks in the database to display them in this table -->
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.tname }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.date }}</td>
+                    <td>{{ task.status }}</td>
+                    <td><a href="/update/{{ task.id }}">Update</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
