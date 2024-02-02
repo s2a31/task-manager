@@ -1,27 +1,44 @@
-{% extends "layout.html" %} {% block body %}
+{% extends "layout.html" %} 
+
+{% block body %}
 <div class="header">
     <h1>Update Task</h1>
 </div>
 <div class="container">
-  <form action="/update/{{ task.id }}" method="post">
-    <label for="tname">Task Name:</label>
-    <input type="text" id="tname" name="tname" value="{{ task.tname }}">
-
-    <label for="description">Description:</label>
-    <textarea id="description" name="description">{{ task.description }}</textarea>
-
-    <label for="date">Due Date:</label>
-    <input type="date" id="date" name="date" value="{{ task.date }}">
-
-    <label for="status">Status:</label>
-    <select id="status" name="status">
-      <option value="Pending" {% if task.status == 'Pending' %} selected {% endif %}>Pending</option>
-      <option value="InProgress" {% if task.status == 'InProgress' %} selected {% endif %}>In Progress</option>
-      <option value="Completed" {% if task.status == 'Completed' %} selected {% endif %}>Completed</option>
-    </select>
-
-    <input type="submit" value="Update Task">
-  </form>
-  <a href="/">Cancel</a>
+    <div class="section">
+        <form action="/update/{{ task.id }}" method="post" class="update-form mx-auto">
+            <div class="mb-3">
+                <label for="tname" class="form-label">Task Name</label>
+                <input type="text" name="tname" id="tname" class="form-control" value="{{ task.tname }}" required/>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" rows="3" required>{{ task.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" name="date" id="date" class="form-control" value="{{ task.date }}" required/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusPending" value="Pending" {% if task.status == 'Pending' %} checked {% endif %} required>
+                    <label class="form-check-label" for="statusPending">Pending</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusInProgress" value="In Progress" {% if task.status == 'In Progress' %} checked {% endif %}>
+                    <label class="form-check-label" for="statusInProgress">In Progress</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusCompleted" value="Completed" {% if task.status == 'Completed' %} checked {% endif %}>
+                    <label class="form-check-label" for="statusCompleted">Completed</label>
+                </div>
+            </div>
+            <div class="mb-3 text-center d-flex justify-content-center">
+                <a href="/" class="btn cancel-btn">Cancel</a>
+                <button type="submit" class="btn update-btn">Update Task</button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

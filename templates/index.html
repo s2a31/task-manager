@@ -1,48 +1,123 @@
 {% extends "layout.html" %} {% block body %}
-<div class="header">
-    <h1>Tasks</h1>
-</div>
 <div class="container">
     <div class="section">
-        <h2>Add a Task</h2>
-        <form action="/" method="post">
-            <input type="text" name="tname" placeholder="Task Name" required />
-            <textarea name="description" id="description" cols="30" rows="3" required></textarea>
-            <input type="date" name="date" id="date" required />
-            <select name="status" required>
-                <option value="" disabled selected style="display: none">Please select an option</option>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-            </select>
-            <input type="submit" value="Add Task" />
+        <h2 class="section-heading">Add a Task</h2>
+        <form action="/" method="post" class="add-form mx-auto">
+            <div class="mb-3">
+                <label for="tname" class="form-label">Task Name</label>
+                <input type="text" name="tname" id="tname" class="form-control" placeholder="Task Name" required />
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" rows="3" placeholder="Description" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" name="date" id="date" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusPending" value="Pending" required />
+                    <label class="form-check-label" for="statusPending">Pending</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusInProgress" value="In Progress" />
+                    <label class="form-check-label" for="statusInProgress">In Progress</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" id="statusCompleted" value="Completed" />
+                    <label class="form-check-label" for="statusCompleted">Completed</label>
+                </div>
+            </div>
+            <div class="mb-3 text-center d-flex justify-content-center">
+                <button type="submit" id="submit" class="btn">Add Task</button>
+            </div>
         </form>
     </div>
 
+    <!-- Pending Tasks Section -->
     <div class="section">
-        <h2>All Tasks</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Task Name</th>
-                    <th>Description</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Loop through tasks in the database to display them in this table -->
-                {% for task in tasks %}
-                <tr>
-                    <td>{{ task.tname }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.date }}</td>
-                    <td>{{ task.status }}</td>
-                    <td><a href="/update/{{ task.id }}">Update</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <h2 class="section-heading">Pending Tasks</h2>
+        <div id="pending-tasks" class="task-category">
+            {% for task in tasks if task.status == 'Pending' %}
+            <div class="card task-item" draggable="true" id="task-{{ task.id }}">
+                <div class="card-body">
+                    <span class="card-title">{{ task.tname }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Description</div>
+                    <span class="card-text task-description">{{ task.description }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Due Date</div>
+                    <span class="card-text">{{ task.date }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Status</div>
+                    <span class="task-status">{{ task.status }}</span>
+                </div>
+                <div class="card-footer">
+                    <a href="/update/{{ task.id }}" class="btn">Update</a>
+                    <form action="/delete/{{ task.id }}" method="post" class="task-delete">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <!-- In Progress Tasks Section -->
+    <div class="section">
+        <h2 class="section-heading">In Progress Tasks</h2>
+        <div id="in-progress-tasks" class="task-category">
+            {% for task in tasks if task.status == 'In Progress' %}
+            <div class="card task-item" draggable="true" id="task-{{ task.id }}">
+                <div class="card-body">
+                    <span class="card-title">{{ task.tname }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Description</div>
+                    <span class="card-text task-description">{{ task.description }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Due Date</div>
+                    <span class="card-text">{{ task.date }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Status</div>
+                    <span class="task-status">{{ task.status }}</span>
+                </div>
+                <div class="card-footer">
+                    <a href="/update/{{ task.id }}" class="btn">Update</a>
+                    <form action="/delete/{{ task.id }}" method="post" class="task-delete">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Completed Tasks Section -->
+    <div class="section">
+        <h2 class="section-heading">Completed Tasks</h2>
+        <div id="completed-tasks" class="task-category">
+            {% for task in tasks if task.status == 'Completed' %}
+            <div class="card task-item" draggable="true" id="task-{{ task.id }}">
+                <div class="card-body">
+                    <span class="card-title">{{ task.tname }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Description</div>
+                    <span class="card-text task-description">{{ task.description }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Due Date</div>
+                    <span class="card-text">{{ task.date }}</span>
+                    <div class="task-header mb-2 mt-2 text-body-secondary">Status</div>
+                    <span class="task-status">{{ task.status }}</span>
+                </div>
+                <div class="card-footer">
+                    <a href="/update/{{ task.id }}" class="btn">Update</a>
+                    <form action="/delete/{{ task.id }}" method="post" class="task-delete">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section delete-btn-section">
+        <button type="button" class="btn btn-danger" id="delete-all-tasks-btn">Delete All Tasks</button>
+        <button type="button" class="btn btn-warning" id="delete-account-btn">Delete Account</button>
+    </div>
+    
 </div>
 {% endblock %}
