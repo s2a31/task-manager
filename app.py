@@ -153,6 +153,9 @@ def update_task(id):
             return redirect("/")
         else:
             is_update_route = True
+            # Retrieve the username of the logged-in user
+            user = conn.execute("SELECT username FROM users WHERE id = ?", (session['user_id'],)).fetchone()
+            username = user['username'] if user else 'Unknown User'
             # Fetch task details for the given task ID
             task = conn.execute("SELECT * FROM tasks WHERE id=? AND user_id=?", (id, session['user_id'])).fetchone()
             if task is None:
